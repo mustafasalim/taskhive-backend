@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig to read more about this file */
+    "target": "ESNext",
+    "module": "CommonJS",
+    "rootDir": "./",
+    "resolveJsonModule": true /* in case you are importing JSON files */,
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "types": ["node", "express"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
