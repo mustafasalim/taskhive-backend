@@ -16,3 +16,8 @@ export interface ISendPasswordResetEmail {
 export interface ISendResetSuccessEmail {
   email: string
 }
+
+export interface ISendInviteWorkspaceEmail {
+  email: string
+  inviteCode: string
+}

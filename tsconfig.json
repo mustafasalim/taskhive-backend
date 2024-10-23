@@ -12,8 +12,12 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./src/types"],
+    "baseUrl": ".", // Bu, genellikle proje kökünüzü ifade eder
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "types": ["node", "express"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

@@ -1,13 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
 import { NextFunction, Response, Request } from "express"
-
-declare global {
-  namespace Express {
-    interface Request {
-      user?: string | JwtPayload
-    }
-  }
-}
+import { IUser } from "@/models/user-model"
 
 export const verifyToken = (
   req: Request,
@@ -25,7 +18,7 @@ export const verifyToken = (
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as IUser
 
     req.user = decoded
     next()

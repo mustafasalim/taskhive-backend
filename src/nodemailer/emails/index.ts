@@ -1,13 +1,14 @@
-import { response } from "express"
 import dotenv from "dotenv"
 import { transporter } from "../email-config"
 import {
+  inviteWorkspaceEmailTemplate,
   passwordResetRequestTemplate,
   passwordResetSuccessEmailTemplate,
   verificationEmailTemplate,
   welcomeEmailTemplate,
 } from "../email-template"
 import {
+  ISendInviteWorkspaceEmail,
   ISendPasswordResetEmail,
   ISendResetSuccessEmail,
   ISendVerificaionEmail,
@@ -83,6 +84,26 @@ export const sendResetSuccessEmail = async (props: ISendResetSuccessEmail) => {
     console.log("Reset success password email sent successfully", info)
     return info
   } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+export const sendWorkspaceInviteCodeEmail = async (
+  props: ISendInviteWorkspaceEmail
+) => {
+  const { inviteCode, email } = props
+  try {
+    const info = await transporter.sendMail({
+      from: "salimmustafa763@gmail.com", // sender address
+      to: email, // list of receivers
+      subject: "Invite Code ✔", // Subject line
+      html: inviteWorkspaceEmailTemplate({ inviteCode }), // html body
+    })
+    console.log("Verification email sent succesfuly", info)
+
+    return info
+  } catch (error: any) {
+    console.log("Verification email code error")
     throw new Error(error)
   }
 }

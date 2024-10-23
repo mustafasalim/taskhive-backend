@@ -10,3 +10,7 @@ export interface IWelcomeEmailTemplate {
 export interface IPasswordResetRequestEmailTemplate {
   resetToken: string
 }
+
+export interface IInviteWorkspaceEmailTemplate {
+  inviteCode: string
+}
