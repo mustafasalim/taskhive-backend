@@ -5,15 +5,17 @@ import Workspace from "../../models/workspace-model"
 import { sendWorkspaceInviteCodeEmail } from "../../nodemailer/emails"
 
 export const inviteUser = async (req: Request, res: Response) => {
-  const { email, workspaceId, role } = req.body
+  const { email, workspaceId } = req.body
 
   try {
     const inviteCode = generateInviteCode()
 
+    const assignedRole = "member"
+
     const invitation = await Invitation.create({
       email,
       workspace: workspaceId,
-      role,
+      role: assignedRole,
       inviteCode,
       status: "pending",
     })
