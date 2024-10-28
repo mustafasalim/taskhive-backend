@@ -84,6 +84,46 @@ export const getActiveWorkspace = async (req: Request, res: Response) => {
   }
 }
 
+export const leaveWorkspace = async (req: Request, res: Response) => {
+  const { workspaceId } = req.params
+  const loggedInUserId = req.user?.userId
+
+  try {
+    const workspace = await Workspace.findById(workspaceId)
+
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" })
+    }
+
+    if (workspace.owner.toString() === loggedInUserId) {
+      return res
+        .status(403)
+        .json({ message: "Owner cannot leave the workspace" })
+    }
+
+    const isMember = workspace.members.some(
+      (member) => member.user.toString() === loggedInUserId
+    )
+
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "You are not a member of this workspace" })
+    }
+
+    await Workspace.findByIdAndUpdate(workspaceId, {
+      $pull: { members: { user: loggedInUserId } },
+    })
+
+    res
+      .status(200)
+      .json({ message: "You have successfully left the workspace" })
+  } catch (error) {
+    console.error("Error leaving workspace:", error)
+    res.status(500).json({ message: "Error leaving workspace", error })
+  }
+}
+
 export const deleteWorkspace = async (req: Request, res: Response) => {
   const { workspaceId } = req.params
   const userId = req.user?.userId
