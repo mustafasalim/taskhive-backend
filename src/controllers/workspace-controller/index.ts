@@ -46,15 +46,13 @@ export const getUserWorkspaces = async (req: Request, res: Response) => {
 }
 
 export const getActiveWorkspace = async (req: Request, res: Response) => {
-  const { workspaceId } = req.params // Workspace ID from request parameters
-  const loggedInUserId = req.user?.userId // Assuming req.user is set by the authentication middleware
+  const { workspaceId } = req.params
+  const loggedInUserId = req.user?.userId
 
   try {
-    // Fetch the workspace by ID and populate member details
-    const activeWorkspace = await Workspace.findById(workspaceId).populate(
-      "members.user",
-      "name email _id"
-    )
+    const activeWorkspace = await Workspace.findById(workspaceId)
+      .populate("owner", "name email _id")
+      .select("name description owner members")
 
     if (!activeWorkspace) {
       return res.status(404).json({ message: "Workspace not found" })
@@ -66,14 +64,17 @@ export const getActiveWorkspace = async (req: Request, res: Response) => {
         .json({ message: "You are not authorized to access this workspace" })
     }
 
-    // Find the role of the logged-in user in this workspace
     const userRole = activeWorkspace.members.find(
-      (member) => member.user._id.toString() === loggedInUserId.toString()
+      (member) => member.user.toString() === loggedInUserId.toString()
     )?.role
 
-    // Include the user's role in the response
+    const memberIds = activeWorkspace.members.map((member) =>
+      member.user.toString()
+    )
+
     const response = {
       ...activeWorkspace.toObject(),
+      members: memberIds,
       currentUserRole: userRole,
     }
 
@@ -121,6 +122,30 @@ export const leaveWorkspace = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error leaving workspace:", error)
     res.status(500).json({ message: "Error leaving workspace", error })
+  }
+}
+
+export const getWorkspaceMembers = async (req: Request, res: Response) => {
+  const { workspaceId } = req.params
+
+  try {
+    const workspace = await Workspace.findById(workspaceId)
+      .populate("members.user", "name _id")
+      .select("members.user")
+
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" })
+    }
+
+    const members = workspace.members.map((member: any) => ({
+      id: member.user._id.toString(),
+      name: member?.user?.name,
+    }))
+
+    res.status(200).json({ members })
+  } catch (error) {
+    console.error("Error fetching workspace members:", error)
+    res.status(500).json({ message: "Error fetching workspace members", error })
   }
 }
 
