@@ -112,13 +112,21 @@ export const leaveWorkspace = async (req: Request, res: Response) => {
         .json({ message: "You are not a member of this workspace" })
     }
 
+    // Remove user from workspace members
     await Workspace.findByIdAndUpdate(workspaceId, {
       $pull: { members: { user: loggedInUserId } },
     })
 
-    res
-      .status(200)
-      .json({ message: "You have successfully left the workspace" })
+    // Find all projects in the workspace and remove the user from each
+    await Project.updateMany(
+      { workspace: workspaceId },
+      { $pull: { members: loggedInUserId } } // Remove user from project members
+    )
+
+    res.status(200).json({
+      message:
+        "You have successfully left the workspace and associated projects",
+    })
   } catch (error) {
     console.error("Error leaving workspace:", error)
     res.status(500).json({ message: "Error leaving workspace", error })
@@ -129,20 +137,29 @@ export const getWorkspaceMembers = async (req: Request, res: Response) => {
   const { workspaceId } = req.params
 
   try {
-    const workspace = await Workspace.findById(workspaceId)
-      .populate("members.user", "name _id")
-      .select("members.user")
+    // Validate the workspace ID
+    if (!mongoose.Types.ObjectId.isValid(workspaceId)) {
+      return res.status(400).json({ message: "Invalid workspace ID" })
+    }
+
+    // Find the workspace and populate members
+    const workspace = await Workspace.findById(workspaceId).populate({
+      path: "members.user",
+      select: "name email", // Include only name and email, exclude _id
+    })
 
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" })
     }
 
+    // Format the response to include only member details
     const members = workspace.members.map((member: any) => ({
-      id: member.user._id.toString(),
-      name: member?.user?.name,
+      name: member.user.name,
+      email: member.user.email,
+      role: member.role,
     }))
 
-    res.status(200).json({ members })
+    res.status(200).json(members)
   } catch (error) {
     console.error("Error fetching workspace members:", error)
     res.status(500).json({ message: "Error fetching workspace members", error })

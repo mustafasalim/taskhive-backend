@@ -3,6 +3,7 @@ import { verifyToken } from "../../middleware/verify-token"
 import {
   addMembersToProject,
   createProject,
+  deleteProject,
   getProjectById,
   getProjectsByWorkspace,
 } from "../../controllers/project-controller"
@@ -13,5 +14,7 @@ router.post("/create", verifyToken, createProject)
 router.post("/:projectId/members", verifyToken, addMembersToProject)
 router.get("/workspace/:workspaceId", verifyToken, getProjectsByWorkspace)
 router.get("/workspaces/:projectId", verifyToken, getProjectById)
+router.delete("/:projectId", verifyToken, deleteProject)
+router.post("/:projectId/leave", verifyToken, deleteProject)
 
 export default router

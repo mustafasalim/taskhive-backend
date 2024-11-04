@@ -5,9 +5,9 @@ import {
   getActiveWorkspace,
   getUserWorkspaces,
   leaveWorkspace,
+  getWorkspaceMembers,
 } from "../../controllers/workspace-controller"
 import { verifyToken } from "../../middleware/verify-token"
-import { getWorkspaceMembers } from "../../controllers/workspace-controller"
 
 const router: any = express.Router()
 

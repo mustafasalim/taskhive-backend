@@ -4,40 +4,41 @@ import Workspace from "../../models/workspace-model"
 import mongoose from "mongoose"
 
 export const createProject = async (req: Request, res: Response) => {
-  const { name, description, workspaceId, members } = req.body
+  const { name, description, workspaceId } = req.body // Remove members from req.body
   const userId = req.user?.userId
 
   try {
     const workspace = await Workspace.findById(workspaceId)
-    if (!workspace)
+    if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" })
+    }
 
     const isMember = workspace.members.some(
       (member) => member.user.toString() === userId?.toString()
     )
-    if (!isMember)
+    if (!isMember) {
       return res
         .status(403)
         .json({ message: "You are not a member of this workspace" })
+    }
 
-    const uniqueMembers = Array.from(new Set([userId, ...(members || [])]))
-
-    // Create the project
     const project = await Project.create({
       name,
       description,
       workspace: workspaceId,
-      members: uniqueMembers,
+      members: [userId],
     })
 
     res.status(201).json(project)
   } catch (error) {
+    console.error("Error creating project:", error)
     res.status(500).json({ message: "Error creating project", error })
   }
 }
 
 export const getProjectsByWorkspace = async (req: Request, res: Response) => {
   const { workspaceId } = req.params
+  const loggedInUserId = req.user?.userId // Assuming req.user is set by auth middleware
 
   try {
     if (!mongoose.Types.ObjectId.isValid(workspaceId)) {
@@ -46,10 +47,12 @@ export const getProjectsByWorkspace = async (req: Request, res: Response) => {
 
     const objectIdWorkspaceId = new mongoose.Types.ObjectId(workspaceId)
 
+    // Find projects in the workspace where the logged-in user is a member
     const projects = await Project.find({
       workspace: objectIdWorkspaceId,
+      members: loggedInUserId, // Filter for projects where the user is a member
     })
-      .select("-_id -updatedAt")
+      .select("-updatedAt") // Exclude updatedAt field from project
       .populate({
         path: "members",
         select: "name -_id",
@@ -63,12 +66,12 @@ export const getProjectsByWorkspace = async (req: Request, res: Response) => {
         },
       })
 
+    // If no projects found, return an empty array
     if (!projects || projects.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No projects found for this workspace" })
+      return res.status(200).json([])
     }
 
+    // Format the response data
     const formattedProjects = projects.map((project: any) => ({
       name: project.name,
       description: project.description,
@@ -76,6 +79,7 @@ export const getProjectsByWorkspace = async (req: Request, res: Response) => {
       ownerName: project.workspace.owner?.name || null,
       members: project.members.map((member: any) => member.name),
       createdAt: project.createdAt,
+      id: project._id,
     }))
 
     res.status(200).json(formattedProjects)
@@ -136,5 +140,71 @@ export const addMembersToProject = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error adding members to project:", error)
     res.status(500).json({ message: "Error adding members to project", error })
+  }
+}
+
+export const deleteProject = async (req: Request, res: Response) => {
+  const { projectId } = req.params
+  const loggedInUserId = req.user?.userId
+
+  try {
+    const project = await Project.findById(projectId).populate("workspace")
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" })
+    }
+
+    const workspace = await Workspace.findById(project.workspace)
+    const isWorkspaceOwner = workspace?.owner.toString() === loggedInUserId
+    const isProjectCreator = project.members.includes(loggedInUserId as any)
+
+    if (!isWorkspaceOwner && !isProjectCreator) {
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this project" })
+    }
+
+    await Project.findByIdAndDelete(projectId)
+
+    res.status(200).json({ message: "Project deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting project:", error)
+    res.status(500).json({ message: "Error deleting project", error })
+  }
+}
+
+export const leaveProject = async (req: Request, res: Response) => {
+  const { projectId } = req.params
+  const loggedInUserId = req.user?.userId
+
+  try {
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" })
+    }
+
+    const isMember = project.members.includes(loggedInUserId as any)
+    if (!isMember) {
+      return res
+        .status(403)
+        .json({ message: "You are not a member of this project" })
+    }
+
+    const isProjectCreator = project.members[0].toString() === loggedInUserId
+    if (isProjectCreator) {
+      return res
+        .status(403)
+        .json({ message: "Project creator cannot leave the project" })
+    }
+
+    await Project.findByIdAndUpdate(projectId, {
+      $pull: { members: loggedInUserId },
+    })
+
+    res.status(200).json({ message: "You have successfully left the project" })
+  } catch (error) {
+    console.error("Error leaving project:", error)
+    res.status(500).json({ message: "Error leaving project", error })
   }
 }
