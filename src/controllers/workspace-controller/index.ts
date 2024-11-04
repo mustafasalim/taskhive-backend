@@ -137,23 +137,21 @@ export const getWorkspaceMembers = async (req: Request, res: Response) => {
   const { workspaceId } = req.params
 
   try {
-    // Validate the workspace ID
     if (!mongoose.Types.ObjectId.isValid(workspaceId)) {
       return res.status(400).json({ message: "Invalid workspace ID" })
     }
 
-    // Find the workspace and populate members
     const workspace = await Workspace.findById(workspaceId).populate({
       path: "members.user",
-      select: "name email", // Include only name and email, exclude _id
+      select: "name email _id",
     })
 
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" })
     }
 
-    // Format the response to include only member details
     const members = workspace.members.map((member: any) => ({
+      id: member.user._id,
       name: member.user.name,
       email: member.user.email,
       role: member.role,

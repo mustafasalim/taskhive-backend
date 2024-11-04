@@ -55,7 +55,7 @@ export const getProjectsByWorkspace = async (req: Request, res: Response) => {
       .select("-updatedAt") // Exclude updatedAt field from project
       .populate({
         path: "members",
-        select: "name -_id",
+        select: "name _id", // Include both name and _id for members
       })
       .populate({
         path: "workspace",
@@ -77,7 +77,10 @@ export const getProjectsByWorkspace = async (req: Request, res: Response) => {
       description: project.description,
       workspaceName: project.workspace.name,
       ownerName: project.workspace.owner?.name || null,
-      members: project.members.map((member: any) => member.name),
+      members: project.members.map((member: any) => ({
+        id: member._id, // Include member ID
+        name: member.name, // Include member name
+      })),
       createdAt: project.createdAt,
       id: project._id,
     }))
