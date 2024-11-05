@@ -122,6 +122,7 @@ export const addMembersToProject = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Workspace not found" })
     }
 
+    // Validate members: ensure all provided members are part of the workspace
     const validMembers = members.filter((memberId: any) =>
       workspace.members.some((member) => member.user.toString() === memberId)
     )
@@ -132,17 +133,18 @@ export const addMembersToProject = async (req: Request, res: Response) => {
       })
     }
 
-    project.members = Array.from(new Set([...project.members, ...validMembers]))
+    // Replace the project's members with the validated members
+    project.members = validMembers
 
     await project.save()
 
     res.status(200).json({
-      message: "Members added to project successfully",
+      message: "Project members replaced successfully",
       members: project.members,
     })
   } catch (error) {
-    console.error("Error adding members to project:", error)
-    res.status(500).json({ message: "Error adding members to project", error })
+    console.error("Error replacing project members:", error)
+    res.status(500).json({ message: "Error replacing project members", error })
   }
 }
 
