@@ -148,6 +148,32 @@ export const addMembersToProject = async (req: Request, res: Response) => {
   }
 }
 
+export const updateProjectDetails = async (req: Request, res: Response) => {
+  const { projectId } = req.params
+  const { title, description } = req.body
+
+  try {
+    // Find the project by ID
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" })
+    }
+
+    // Update title and description if provided
+    if (title) project.name = title
+    if (description) project.description = description
+
+    // Save the updated project
+    await project.save()
+
+    res.status(200).json({ message: "Project updated successfully", project })
+  } catch (error) {
+    console.error("Error updating project:", error)
+    res.status(500).json({ message: "Error updating project", error })
+  }
+}
+
 export const deleteProject = async (req: Request, res: Response) => {
   const { projectId } = req.params
   const loggedInUserId = req.user?.userId
@@ -183,19 +209,24 @@ export const leaveProject = async (req: Request, res: Response) => {
   const loggedInUserId = req.user?.userId
 
   try {
+    // Find the project by ID
     const project = await Project.findById(projectId)
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" })
     }
 
-    const isMember = project.members.includes(loggedInUserId as any)
+    // Check if the user is a member of the project
+    const isMember = project.members.some(
+      (member) => member.toString() === loggedInUserId
+    )
     if (!isMember) {
       return res
         .status(403)
         .json({ message: "You are not a member of this project" })
     }
 
+    // Prevent the project creator from leaving the project
     const isProjectCreator = project.members[0].toString() === loggedInUserId
     if (isProjectCreator) {
       return res
@@ -203,9 +234,13 @@ export const leaveProject = async (req: Request, res: Response) => {
         .json({ message: "Project creator cannot leave the project" })
     }
 
-    await Project.findByIdAndUpdate(projectId, {
-      $pull: { members: loggedInUserId },
-    })
+    // Remove the user from the members array
+    project.members = project.members.filter(
+      (member) => member.toString() !== loggedInUserId
+    )
+
+    // Save the updated project
+    await project.save()
 
     res.status(200).json({ message: "You have successfully left the project" })
   } catch (error) {
