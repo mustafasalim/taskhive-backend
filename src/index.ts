@@ -8,6 +8,7 @@ import workspaceRoutes from "./routes/workspace-route"
 import invitationRoutes from "./routes/invitation-route"
 import projectRoutes from "./routes/project-route"
 import statusRoutes from "./routes/status-route"
+import issueRoute from "./routes/issue-route"
 import { setupSwagger } from "./swagger"
 import { IUser } from "./models/user-model"
 
@@ -34,6 +35,7 @@ app.use("/api/workspaces", workspaceRoutes)
 app.use("/api/invitation", invitationRoutes)
 app.use("/api/projects", projectRoutes)
 app.use("/api/statuses", statusRoutes)
+app.use("/api/statuses", issueRoute)
 
 app.listen(PORT, () => {
   connectDB()

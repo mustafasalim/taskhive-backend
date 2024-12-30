@@ -4,10 +4,11 @@ export interface IIssue extends Document {
   title: string
   description?: string
   project: mongoose.Types.ObjectId
-  assignedTo?: mongoose.Types.ObjectId
+  assignedTo?: mongoose.Types.ObjectId[]
   status: mongoose.Types.ObjectId
   createdAt: Date
   updatedAt: Date
+  priority?: "low" | "medium" | "high"
 }
 
 const issueSchema = new mongoose.Schema<IIssue>({
@@ -18,11 +19,15 @@ const issueSchema = new mongoose.Schema<IIssue>({
     ref: "Project",
     required: true,
   },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  assignedTo: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   status: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Status",
     required: true,
+  },
+  priority: {
+    type: String,
+    enum: ["low", "medium", "high"],
   },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

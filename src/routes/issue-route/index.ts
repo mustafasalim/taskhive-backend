@@ -4,11 +4,11 @@ import { verifyToken } from "../../middleware/verify-token"
 import {
   addIssueToStatus,
   getIssuesByStatus,
-} from "@/controllers/issue-controller"
+} from "../../controllers/issue-controller"
 
 const router: any = express.Router()
 
-router.post("/statuses/:statusId/issues", verifyToken, addIssueToStatus)
-router.get("/statuses/:statusId/issues", verifyToken, getIssuesByStatus)
+router.post("/:statusId/issues/create", verifyToken, addIssueToStatus)
+router.get("/:statusId/issues", verifyToken, getIssuesByStatus)
 
 export default router
