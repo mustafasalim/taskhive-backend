@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth-route"
 import workspaceRoutes from "./routes/workspace-route"
 import invitationRoutes from "./routes/invitation-route"
 import projectRoutes from "./routes/project-route"
+import statusRoutes from "./routes/status-route"
 import { setupSwagger } from "./swagger"
 import { IUser } from "./models/user-model"
 
@@ -32,6 +33,7 @@ app.use("/api/auth", authRoutes)
 app.use("/api/workspaces", workspaceRoutes)
 app.use("/api/invitation", invitationRoutes)
 app.use("/api/projects", projectRoutes)
+app.use("/api/statuses", statusRoutes)
 
 app.listen(PORT, () => {
   connectDB()
