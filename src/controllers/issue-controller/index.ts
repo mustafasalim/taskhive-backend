@@ -2,14 +2,18 @@ import { Request, Response } from "express"
 import Issue from "../../models/issue-model"
 import Status from "../../models/status-model"
 
-export const addIssueToStatus = async (req: Request, res: Response) => {
+export const addIssueToStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { statusId } = req.params
   const { title, description, assignedTo = [], priority } = req.body
 
   try {
     const status = await Status.findById(statusId)
     if (!status) {
-      return res.status(404).json({ message: "Status not found" })
+      res.status(404).json({ message: "Status not found" })
+      return
     }
 
     const issue = await Issue.create({
@@ -29,7 +33,10 @@ export const addIssueToStatus = async (req: Request, res: Response) => {
   }
 }
 
-export const getIssuesByStatus = async (req: Request, res: Response) => {
+export const getIssuesByStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const { statusId } = req.params
 
   try {
@@ -41,5 +48,66 @@ export const getIssuesByStatus = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error fetching issues by status:", error)
     res.status(500).json({ message: "Error fetching issues by status", error })
+  }
+}
+
+export const updateIssue = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { issueId } = req.params
+  const { title, description, assignedTo, status, priority } = req.body
+
+  try {
+    const issue = await Issue.findById(issueId)
+    if (!issue) {
+      res.status(404).json({ message: "Issue not found" })
+      return
+    }
+
+    // Update the issue with new values
+    const updatedIssue = await Issue.findByIdAndUpdate(
+      issueId,
+      {
+        ...(title && { title }),
+        ...(description !== undefined && { description }),
+        ...(assignedTo && {
+          assignedTo: Array.isArray(assignedTo) ? assignedTo : [],
+        }),
+        ...(status && { status }),
+        ...(priority && { priority }),
+        updatedAt: new Date(),
+      },
+      { new: true }
+    ).populate("assignedTo", "_id name email")
+
+    res.status(200).json(updatedIssue)
+  } catch (error) {
+    console.error("Error updating issue:", error)
+    res.status(500).json({ message: "Error updating issue", error })
+  }
+}
+
+export const getIssueById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { issueId } = req.params
+
+  try {
+    const issue = await Issue.findById(issueId).populate(
+      "assignedTo",
+      "_id name email"
+    )
+
+    if (!issue) {
+      res.status(404).json({ message: "Issue not found" })
+      return
+    }
+
+    res.status(200).json(issue)
+  } catch (error) {
+    console.error("Error fetching issue:", error)
+    res.status(500).json({ message: "Error fetching issue", error })
   }
 }
