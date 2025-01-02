@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-export interface IIssue extends Document {
+export interface IIssue extends mongoose.Document {
   title: string
   description?: string
   project: mongoose.Types.ObjectId
@@ -9,6 +9,7 @@ export interface IIssue extends Document {
   createdAt: Date
   updatedAt: Date
   priority?: "low" | "medium" | "high"
+  images?: string[]
 }
 
 const issueSchema = new mongoose.Schema<IIssue>({
@@ -29,6 +30,7 @@ const issueSchema = new mongoose.Schema<IIssue>({
     type: String,
     enum: ["low", "medium", "high"],
   },
+  images: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 })
