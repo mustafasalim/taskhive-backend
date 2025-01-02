@@ -6,6 +6,7 @@ import {
   getIssuesByStatus,
   updateIssue,
   getIssueById,
+  getLiveKitToken,
 } from "../../controllers/issue-controller"
 import {
   createComment,
@@ -20,5 +21,8 @@ router.put("/issues/:issueId/update", verifyToken, updateIssue)
 router.get("/issues/:issueId", verifyToken, getIssueById)
 router.post("/:issueId/issues/comments/create", verifyToken, createComment)
 router.get("/:issueId/issues/comments", verifyToken, getCommentsByIssue)
+
+// LiveKit token endpoint
+router.get("/issues/livekit/token", verifyToken, getLiveKitToken)
 
 export default router

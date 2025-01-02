@@ -7,6 +7,13 @@ const memberSchema = new mongoose.Schema({
     enum: ["admin", "operator", "member"],
     default: "member",
   },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+})
+
+memberSchema.pre("save", function (next) {
+  this.updatedAt = new Date()
+  next()
 })
 
 const workspaceSchema = new mongoose.Schema(

@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { AccessToken } from "livekit-server-sdk"
 import Issue from "../../models/issue-model"
 import Status from "../../models/status-model"
 
@@ -109,5 +110,57 @@ export const getIssueById = async (
   } catch (error) {
     console.error("Error fetching issue:", error)
     res.status(500).json({ message: "Error fetching issue", error })
+  }
+}
+
+export const getLiveKitToken = async (req: Request, res: Response) => {
+  const room = req.query.room as string
+  const username = req.query.username as string
+  const userId = req.user?._id
+
+  console.log("username", username)
+
+  if (!room) {
+    console.error("Room parameter is missing!")
+    return res.status(400).json({ error: 'Missing "room" query parameter' })
+  }
+
+  if (!username) {
+    console.error("Username parameter is missing!")
+    return res.status(400).json({ error: 'Missing "username" query parameter' })
+  }
+
+  const apiKey = process.env.LIVEKIT_API_KEY
+  const apiSecret = process.env.LIVEKIT_API_SECRET
+
+  if (!apiKey || !apiSecret) {
+    console.error("LiveKit API key or secret is missing!")
+    return res.status(500).json({ error: "Server misconfigured" })
+  }
+
+  try {
+    console.log("Generating LiveKit token with:", {
+      apiKey,
+      apiSecret,
+      room,
+      username,
+      userId,
+    })
+
+    const at = new AccessToken(apiKey, apiSecret, { identity: username })
+    at.addGrant({
+      room,
+      roomJoin: true,
+      canPublish: true,
+      canSubscribe: true,
+    })
+
+    const token = await at.toJwt()
+    console.log("Generated Token:", token)
+
+    return res.status(200).json({ token })
+  } catch (error) {
+    console.error("Error generating LiveKit token:", error)
+    return res.status(500).json({ error: "Token generation failed" })
   }
 }

@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
 import Workspace from "../../models/workspace-model"
+import { User } from "../../models/user-model"
 import Project from "../../models/project-model"
+import Issue from "../../models/issue-model"
 import mongoose from "mongoose"
 
 export const createWorkspace = async (req: Request, res: Response) => {
@@ -141,10 +143,12 @@ export const getWorkspaceMembers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid workspace ID" })
     }
 
-    const workspace = await Workspace.findById(workspaceId).populate({
-      path: "members.user",
-      select: "name email _id",
-    })
+    const workspace = await Workspace.findById(workspaceId)
+      .populate({
+        path: "members.user",
+        select: "name email _id",
+      })
+      .lean()
 
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" })
@@ -155,6 +159,8 @@ export const getWorkspaceMembers = async (req: Request, res: Response) => {
       name: member.user.name,
       email: member.user.email,
       role: member.role,
+      createdAt: member.createdAt,
+      updatedAt: member.updatedAt,
     }))
 
     res.status(200).json(members)
@@ -197,5 +203,63 @@ export const deleteWorkspace = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error deleting workspace:", error)
     res.status(500).json({ message: "Error deleting workspace", error })
+  }
+}
+
+export const updateMemberRole = async (req: Request, res: Response) => {
+  try {
+    const { workspaceId, memberId } = req.params
+    const { role } = req.body
+    const userId = req.user?.userId
+
+    // Check if workspace exists
+    const workspace = await Workspace.findById(workspaceId)
+    if (!workspace) {
+      return res.status(404).json({ message: "Workspace not found" })
+    }
+
+    // Check if user has permission (only admin and operator can update roles)
+    const currentUserMember = workspace.members.find(
+      (member) => member.user.toString() === userId?.toString()
+    )
+    if (
+      !currentUserMember ||
+      (currentUserMember.role !== "admin" &&
+        currentUserMember.role !== "operator")
+    ) {
+      return res
+        .status(403)
+        .json({ message: "You don't have permission to update roles" })
+    }
+
+    // Check if target member exists
+    const memberIndex = workspace.members.findIndex(
+      (member) => member.user.toString() === memberId
+    )
+    if (memberIndex === -1) {
+      return res.status(404).json({ message: "Member not found" })
+    }
+
+    // Prevent changing workspace owner's role
+    if (workspace.owner.toString() === memberId) {
+      return res
+        .status(403)
+        .json({ message: "Cannot change workspace owner's role" })
+    }
+
+    // Validate role
+    const validRoles = ["admin", "operator", "member", "viewer"]
+    if (!validRoles.includes(role)) {
+      return res.status(400).json({ message: "Invalid role" })
+    }
+
+    // Update member's role
+    workspace.members[memberIndex].role = role
+    await workspace.save()
+
+    return res.status(200).json({ message: "Role updated successfully" })
+  } catch (error) {
+    console.error("Error updating member role:", error)
+    return res.status(500).json({ message: "Internal server error" })
   }
 }

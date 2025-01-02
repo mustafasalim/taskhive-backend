@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "livekit-server-sdk": "^2.9.4",
     "nodemailer": "^6.9.15",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
