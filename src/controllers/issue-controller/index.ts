@@ -42,7 +42,7 @@ export const addIssueToStatus = async (
   res: Response
 ): Promise<void> => {
   const { statusId } = req.params
-  const { title, description, assignedTo = [], priority } = req.body
+  const { title, description, assignedTo = [], priority, dueDate } = req.body
   const files = req.files as Express.Multer.File[]
 
   try {
@@ -65,6 +65,7 @@ export const addIssueToStatus = async (
       priority,
       project: status.project,
       images: imageUrls,
+      dueDate: dueDate || null,
     })
 
     const populatedIssue = await issue.populate("assignedTo", "_id name email")
@@ -82,10 +83,11 @@ export const getIssuesByStatus = async (
   const { statusId } = req.params
 
   try {
-    const issues = await Issue.find({ status: statusId }).populate(
-      "assignedTo",
-      "_id name email"
-    )
+    const issues = await Issue.find({ status: statusId })
+      .select(
+        "title description assignedTo status priority project images createdAt updatedAt dueDate"
+      )
+      .populate("assignedTo", "_id name email")
     res.status(200).json(issues)
   } catch (error) {
     console.error("Error fetching issues by status:", error)
@@ -98,7 +100,7 @@ export const updateIssue = async (
   res: Response
 ): Promise<void> => {
   const { issueId } = req.params
-  const { title, description, assignedTo, status, priority } = req.body
+  const { title, description, assignedTo, status, priority, dueDate } = req.body
 
   try {
     const issue = await Issue.findById(issueId)
@@ -118,6 +120,7 @@ export const updateIssue = async (
         }),
         ...(status && { status }),
         ...(priority && { priority }),
+        ...(dueDate !== undefined && { dueDate }),
         updatedAt: new Date(),
       },
       { new: true }
@@ -137,10 +140,11 @@ export const getIssueById = async (
   const { issueId } = req.params
 
   try {
-    const issue = await Issue.findById(issueId).populate(
-      "assignedTo",
-      "_id name email"
-    )
+    const issue = await Issue.findById(issueId)
+      .select(
+        "title description assignedTo status priority project images createdAt updatedAt dueDate"
+      )
+      .populate("assignedTo", "_id name email")
 
     if (!issue) {
       res.status(404).json({ message: "Issue not found" })

@@ -10,6 +10,7 @@ export interface IIssue extends mongoose.Document {
   updatedAt: Date
   priority?: "low" | "medium" | "high"
   images?: string[]
+  dueDate?: Date
 }
 
 const issueSchema = new mongoose.Schema<IIssue>({
@@ -31,6 +32,7 @@ const issueSchema = new mongoose.Schema<IIssue>({
     enum: ["low", "medium", "high"],
   },
   images: [{ type: String }],
+  dueDate: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 })
