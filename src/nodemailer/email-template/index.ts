@@ -15,25 +15,27 @@ export const verificationEmailTemplate = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Email</title>
+  <title>Verify Your Taskhive Email</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Verify Your Email</h1>
-  </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <p>Thank you for signing up! Your verification code is:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">${verificationCode}</span>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background-color: #7c3aed; padding: 24px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-weight: 500; font-size: 24px;">Taskhive Email Verification</h1>
     </div>
-    <p>Enter this code on the verification page to complete your registration.</p>
-    <p>This code will expire in 15 minutes for security reasons.</p>
-    <p>If you didn't create an account with us, please ignore this email.</p>
-    <p>Best regards,<br>Your App Team</p>
-  </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+    <div style="padding: 32px 24px;">
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Welcome to Taskhive!</p>
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Please use the verification code below to complete your registration:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <div style="background-color: #f3f4f6; padding: 16px; border-radius: 6px; display: inline-block;">
+          <span style="font-size: 28px; font-weight: 600; letter-spacing: 8px; color: #7c3aed;">${verificationCode}</span>
+        </div>
+      </div>
+      <p style="color: #6b7280; margin: 0 0 8px 0; font-size: 14px;">This code will expire in 15 minutes.</p>
+      <p style="color: #6b7280; margin: 0; font-size: 14px;">If you didn't request this code, please ignore this email.</p>
+    </div>
+    <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} Taskhive. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
@@ -41,42 +43,37 @@ export const verificationEmailTemplate = (
 }
 
 export const welcomeEmailTemplate = (props: IWelcomeEmailTemplate) => {
-  const { appName, name } = props
-  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="ltr" lang="en">
-
-  <head>
-    <link rel="preload" as="image" href="https://react-email-demo-3kjjfblod-resend.vercel.app/static/koala-logo.png" />
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-    <meta name="x-apple-disable-message-reformatting" /><!--$-->
-  </head>
-  <div style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0">The sales intelligence platform that helps you uncover qualified leads.<div> ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿ ‌​‍‎‏﻿</div>
+  const { name } = props
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Taskhive</title>
+</head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background-color: #7c3aed; padding: 24px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-weight: 500; font-size: 24px;">Welcome to Taskhive</h1>
+    </div>
+    <div style="padding: 32px 24px;">
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Hi ${name},</p>
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Welcome to Taskhive! We're excited to have you on board. Get started by exploring our platform and managing your tasks efficiently:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${
+          process.env.CLIENT_URL
+        }" style="display: inline-block; background-color: #7c3aed; color: white; padding: 12px 32px; text-decoration: none; border-radius: 6px; font-weight: 500; transition: background-color 0.2s;">Get Started</a>
+      </div>
+      <p style="color: #4b5563; margin: 24px 0 0 0;">Best regards,<br>The Taskhive Team</p>
+    </div>
+    <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} Taskhive. All rights reserved.</p>
+    </div>
   </div>
-
-  <body style="background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,&quot;Segoe UI&quot;,Roboto,Oxygen-Sans,Ubuntu,Cantarell,&quot;Helvetica Neue&quot;,sans-serif">
-    <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="max-width:37.5em;margin:0 auto;padding:20px 0 48px">
-      <tbody>
-        <tr style="width:100%">
-          <td>
-            <p style="font-size:16px;line-height:26px;margin:16px 0">Hi <!-- -->${name}<!-- -->,</p>
-            <p style="font-size:16px;line-height:26px;margin:16px 0">Welcome to ${appName}, the sales intelligence platform that helps you uncover qualified leads and close deals faster.</p>
-            <table align="center" width="100%" border="0" cellPadding="0" cellSpacing="0" role="presentation" style="text-align:center">
-              <tbody>
-                <tr>
-                  <td><a href="${process.env.CLIENT_URL}" style="line-height:100%;text-decoration:none;display:block;max-width:100%;mso-padding-alt:0px;background-color:#5F51E8;border-radius:3px;color:#fff;font-size:16px;text-align:center;padding:12px 12px 12px 12px" target="_blank"><span><!--[if mso]><i style="mso-font-width:300%;mso-text-raise:18" hidden>&#8202;&#8202;</i><![endif]--></span><span style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px">Get started</span><span><!--[if mso]><i style="mso-font-width:300%" hidden>&#8202;&#8202;&#8203;</i><![endif]--></span></a></td>
-                </tr>
-              </tbody>
-            </table>
-            <p style="font-size:16px;line-height:26px;margin:16px 0">Best,<br />The ${appName} team</p>
-            <hr style="width:100%;border:none;border-top:1px solid #eaeaea;border-color:#cccccc;margin:20px 0" />
-            <p style="font-size:12px;line-height:24px;margin:16px 0;color:#8898aa">470 Noor Ave STE B #1148, South San Francisco, CA 94080</p>
-          </td>
-        </tr>
-      </tbody>
-    </table><!--/$-->
-  </body>
-
-</html>`
+</body>
+</html>
+`
 }
 
 export const passwordResetSuccessEmailTemplate = () => {
@@ -86,32 +83,35 @@ export const passwordResetSuccessEmailTemplate = () => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Password Reset Successful</title>
+  <title>Taskhive Password Reset Successful</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Password Reset Successful</h1>
-  </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <p>We're writing to confirm that your password has been successfully reset.</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <div style="background-color: #4CAF50; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
-        ✓
-      </div>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background-color: #7c3aed; padding: 24px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-weight: 500; font-size: 24px;">Password Reset Successful</h1>
     </div>
-    <p>If you did not initiate this password reset, please contact our support team immediately.</p>
-    <p>For security reasons, we recommend that you:</p>
-    <ul>
-      <li>Use a strong, unique password</li>
-      <li>Enable two-factor authentication if available</li>
-      <li>Avoid using the same password across multiple sites</li>
-    </ul>
-    <p>Thank you for helping us keep your account secure.</p>
-    <p>Best regards,<br>Your App Team</p>
-  </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+    <div style="padding: 32px 24px;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <div style="background-color: #dcfce7; width: 48px; height: 48px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6L9 17L4 12" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p style="color: #4b5563; margin: 0; font-weight: 500;">Your Taskhive password has been successfully reset</p>
+      </div>
+      <div style="background-color: #f3f4f6; padding: 16px; border-radius: 6px; margin-bottom: 24px;">
+        <p style="color: #4b5563; margin: 0 0 12px 0; font-weight: 500;">Security Recommendations:</p>
+        <ul style="color: #6b7280; margin: 0; padding-left: 20px;">
+          <li>Use a strong, unique password</li>
+          <li>Enable two-factor authentication</li>
+          <li>Never share your password with others</li>
+        </ul>
+      </div>
+      <p style="color: #6b7280; margin: 0; font-size: 14px;">If you didn't request this change, please contact Taskhive support immediately.</p>
+    </div>
+    <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} Taskhive. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
@@ -128,24 +128,25 @@ export const passwordResetRequestTemplate = (
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Your Password</title>
+  <title>Reset Your Taskhive Password</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Password Reset</h1>
-  </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <p>We received a request to reset your password. If you didn't make this request, please ignore this email.</p>
-    <p>To reset your password, click the button below:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <a href="${resetToken}" style="background-color: #4CAF50; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background-color: #7c3aed; padding: 24px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-weight: 500; font-size: 24px;">Reset Your Taskhive Password</h1>
     </div>
-    <p>This link will expire in 1 hour for security reasons.</p>
-    <p>Best regards,<br>Your App Team</p>
-  </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+    <div style="padding: 32px 24px;">
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Hello,</p>
+      <p style="color: #4b5563; margin: 0 0 24px 0;">We received a request to reset your Taskhive password. Click the button below to proceed:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <a href="${resetToken}" style="display: inline-block; background-color: #7c3aed; color: white; padding: 12px 32px; text-decoration: none; border-radius: 6px; font-weight: 500; transition: background-color 0.2s;">Reset Password</a>
+      </div>
+      <p style="color: #6b7280; margin: 0 0 8px 0; font-size: 14px;">This link will expire in 1 hour.</p>
+      <p style="color: #6b7280; margin: 0; font-size: 14px;">If you didn't request this reset, please ignore this email.</p>
+    </div>
+    <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} Taskhive. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
@@ -156,27 +157,34 @@ export const inviteWorkspaceEmailTemplate = (
   props: IInviteWorkspaceEmailTemplate
 ) => {
   const { inviteCode } = props
+  console.log("fawfwadw", inviteCode)
+
   return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join Workspace</title>
+  <title>Taskhive Workspace Invitation</title>
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(to right, #4CAF50, #45a049); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">Join workspace</h1>
-  </div>
-  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p>Hello,</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #4CAF50;">${inviteCode}</span>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
+  <div style="background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <div style="background-color: #7c3aed; padding: 24px; text-align: center;">
+      <h1 style="color: white; margin: 0; font-weight: 500; font-size: 24px;">Join Taskhive Workspace</h1>
     </div>
-    
-  </div>
-  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
-    <p>This is an automated message, please do not reply to this email.</p>
+    <div style="padding: 32px 24px;">
+      <p style="color: #4b5563; margin: 0 0 24px 0;">Hello,</p>
+      <p style="color: #4b5563; margin: 0 0 24px 0;">You've been invited to join a Taskhive workspace. Use the code below to accept the invitation:</p>
+      <div style="text-align: center; margin: 32px 0;">
+        <div style="background-color: #f3f4f6; padding: 16px; border-radius: 6px; display: inline-block;">
+          <span style="font-family: monospace; font-size: 24px; font-weight: 600; letter-spacing: 2px; color: #7c3aed;">${inviteCode}</span>
+        </div>
+      </div>
+      <p style="color: #6b7280; margin: 0; font-size: 14px;">Please copy this code exactly as shown above.</p>
+    </div>
+    <div style="background-color: #f9fafb; padding: 16px; text-align: center; border-top: 1px solid #e5e7eb;">
+      <p style="color: #9ca3af; margin: 0; font-size: 12px;">© ${new Date().getFullYear()} Taskhive. All rights reserved.</p>
+    </div>
   </div>
 </body>
 </html>
